@@ -1,0 +1,16 @@
+msgid ""
+msgstr ""
+
+"Content-Type: text/plain; charset=UTF-8"
+
+msgid "Hebei Unicom Wo Campus Client"
+msgstr "河北联通校园"
+
+msgid "Wo Campus username"
+msgstr "我的校园用户名"
+
+msgid "Wo Campus mobile phone"
+msgstr "登录 App 时提供的手机号"
+
+msgid "Wo Campus password"
+msgstr "我的校园密码"

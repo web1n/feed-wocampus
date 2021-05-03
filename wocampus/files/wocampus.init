@@ -1,0 +1,42 @@
+#!/bin/sh /etc/rc.common
+
+START=90
+
+USE_PROCD=1
+PROG=/usr/lib/wocampus/campus.sh
+
+start_service()
+{
+	echo service wocampus start
+	
+    procd_open_instance
+    procd_set_param command "$PROG"
+    procd_set_param respawn
+    procd_close_instance
+}
+
+stop_service()
+{
+	echo service wocampus stop
+}
+
+service_triggers()
+{
+    procd_add_reload_trigger wocampus
+}
+
+reload_service()
+{
+	echo service wocampus reload
+}
+
+stop_service()
+{
+	echo service wocampus stop
+}
+
+restart() 
+{
+	stop
+	start
+}
