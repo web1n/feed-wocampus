@@ -31,15 +31,7 @@ end
 
 
 local function uuid()
-	local rand = nixio.fs.readfile('/dev/urandom', 3)
-	math.randomseed(os.time() + rand:byte(1) + (rand:byte(2) * 256) + (rand:byte(3) * 65536))
-	
-	local template ='xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
-	local result = string.gsub(template, '[xy]', function (c)
-		local v = (c == 'x') and math.random(0, 0xf) or math.random(8, 0xb)
-		return string.format('%x', v)
-	end)
-	return result
+	return nixio.fs.readfile('/proc/sys/kernel/random/uuid')
 end
 
 function parse_url(url)
