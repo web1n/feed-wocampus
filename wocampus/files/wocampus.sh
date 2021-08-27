@@ -10,10 +10,7 @@
 	init_proto "$@"
 }
 
-
-# dhcp start
-
-dhcp_init_config() {
+proto_wocampus_init_config() {
 	renew_handler=1
 
 	proto_config_add_string 'ipaddr:ipaddr'
@@ -32,13 +29,17 @@ dhcp_init_config() {
 	proto_config_add_string mtu6rd
 	proto_config_add_string customroutes
 	proto_config_add_boolean classlessroute
+	
+	# campus
+	proto_config_add_string username
+	proto_config_add_string password
 }
 
-dhcp_add_sendopts() {
+proto_wocampus_add_sendopts() {
 	[ -n "$1" ] && append "$3" "-x $1"
 }
 
-dhcp_setup() {
+proto_wocampus_setup() {
 	local config="$1"
 	local iface="$2"
 
@@ -50,7 +51,7 @@ dhcp_setup() {
 		append dhcpopts "-O $opt"
 	done
 
-	json_for_each_item dhcp_add_sendopts sendopts dhcpopts
+	json_for_each_item proto_wocampus_add_sendopts sendopts dhcpopts
 
 	[ -z "$hostname" ] && hostname="$(cat /proc/sys/kernel/hostname)"
 	[ "$hostname" = "*" ] && hostname=
@@ -80,49 +81,16 @@ dhcp_setup() {
 		$clientid $defaultreqopts $broadcast $release $dhcpopts
 }
 
-dhcp_renew() {
+proto_wocampus_renew() {
 	local interface="$1"
 	# SIGUSR1 forces udhcpc to renew its lease
 	local sigusr1="$(kill -l SIGUSR1)"
 	[ -n "$sigusr1" ] && proto_kill_command "$interface" $sigusr1
 }
 
-dhcp_teardown() {
+proto_wocampus_teardown() {
 	local interface="$1"
 	proto_kill_command "$interface"
-}
-
-# dhcp end
-
-
-proto_wocampus_init_config() {
-	dhcp_init_config "$@"
-	
-	proto_config_add_string username
-	proto_config_add_string password
-	
-	proto_config_add_boolean should_login
-}
-
-proto_wocampus_setup() {
-	dhcp_setup "$@"
-	
-	local config="$1"
-	$(uci set network.$config.should_login=true & uci commit)
-}
-
-proto_wocampus_renew() {
-	dhcp_renew "$@"
-	
-	local config="$1"
-	$(uci set network.$config.should_login=true & uci commit)
-}
-
-proto_wocampus_teardown() {
-	dhcp_teardown "$@"
-	
-	local config="$1"
-	$(uci set network.$config.should_login=false & uci commit)
 }
 
 [ -n "$INCLUDE_ONLY" ] || {
