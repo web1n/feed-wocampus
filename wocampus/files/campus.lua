@@ -78,7 +78,7 @@ function generate_real_params(url, data)
 end
 
 function curl_get(url, interface)
-	local command = "curl -i -s --show-error --user-agent 'android,lbs' --connect-timeout 8 '%s'" % url
+	local command = "curl -i -s --user-agent 'android,lbs' --connect-timeout 8 '%s'" % url
 	if(interface ~= nil) then
 		command = '%s --interface %s' % {command, interface}
 	end
