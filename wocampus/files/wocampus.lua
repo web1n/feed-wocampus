@@ -28,7 +28,7 @@ function notify(content, interface)
 	end
 end
 
-function do_login(interface)
+function do_login(interface, redirect_url)
 	local obj = campus:new(interface.device)
 	local res, err = obj:login(interface.username, interface.password, interface.ip)
 	if err then return nil, err	end
@@ -68,7 +68,7 @@ while true do
 		if(check_result ~= true and check_result ~= false) then
 			notify 'network is not ok, should login'
 			
-			local res, err = do_login(interface)
+			local res, err = do_login(interface, check_result)
 			if not res or err then
 				notify(err or 'can not auth', interface['name'])
 				luci.util.ubus('network.interface.%s' % interface['name'], 'down', {})

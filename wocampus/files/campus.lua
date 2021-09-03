@@ -78,21 +78,20 @@ function generate_real_params(url, data)
 end
 
 function curl_get(url, interface)
-	local command = "curl -i -s --user-agent 'android,lbs' --connect-timeout 1 '%s'" % url
+	local command = "curl -i -s --show-error --user-agent 'android,lbs' --connect-timeout 8 '%s'" % url
 	if(interface ~= nil) then
 		command = '%s --interface %s' % {command, interface}
 	end
-	
-	local result = luci.util.exec(command):split'\r\n\r\n'
+	local result = luci.util.exec(command):split('\r\n\r\n', 1)
 	if(#result ~= 2) then return 0, nil, {} end
 	
 	local data = result[2]
 	if(#data == 0) then data = nil end
 	
 	local code = tonumber(result[1]:split' '[2])
-
+	
 	local response_headers = {}
-	for k, line in pairs(result[1]:split'\n') do
+	for k, line in pairs(result[1]:split'\r\n') do
 		local args = line:split': '
 		if(#args == 2) then
 			response_headers[args[1]:lower()] = args[2]
@@ -202,7 +201,7 @@ function campus:post(redirect_url)
 		NET_ACCOUNT = self.net_account,
 		NET_PASSWD = self.net_password,
 		
-		ACCOUNT_ID = self.accunt_id,
+		ACCOUNT_ID = self.account_id,
 		TOKEN = self.token
 	}
 	
