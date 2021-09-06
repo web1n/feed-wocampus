@@ -17,7 +17,7 @@ define Package/wocampus
 	CATEGORY:=Utilities
 	TITLE:=WoCampus
 	PKGARCH:=all
-	DEPENDS:=+curl +php7 +php7-cli +php7-mod-curl +php7-mod-json +php7-mod-openssl
+	DEPENDS:=+lua +lua-openssl +luci-base +curl
 endef
 
 define Build/Compile
@@ -25,8 +25,11 @@ define Build/Compile
 endef
 
 define Package/wocampus/install
-	$(INSTALL_DIR) $(1)/usr/lib/wocampus
-	$(INSTALL_BIN) ./files/wocampus/* $(1)/usr/lib/wocampus/
+	$(INSTALL_DIR) $(1)/usr/lib/lua
+	$(INSTALL_BIN) ./files/campus.lua $(1)/usr/lib/lua/campus.lua
+	
+	$(INSTALL_DIR) $(1)/usr/sbin
+	$(INSTALL_BIN) ./files/wocampus.lua $(1)/usr/sbin/wocampus.lua
 	
 	$(INSTALL_DIR) $(1)/lib/netifd/proto
 	$(INSTALL_BIN) ./files/wocampus.sh $(1)/lib/netifd/proto/wocampus.sh
